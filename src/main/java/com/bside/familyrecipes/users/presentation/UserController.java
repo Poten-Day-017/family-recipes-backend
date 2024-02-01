@@ -1,4 +1,4 @@
-package com.bside.familyrecipes.users.application;
+package com.bside.familyrecipes.users.presentation;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
