@@ -26,6 +26,8 @@ public record RecipeCreateRequest(
     String totalOpenYn,
     @Schema(description = "요리 재료 리스트", requiredMode = REQUIRED)
     List<Ingredient> ingredientList,
+    @Schema(description = "요리 재료 리스트", requiredMode = NOT_REQUIRED)
+    List<Ingredient> secretIngredientList,
     @Schema(description = "요리 순서 리스트", requiredMode = REQUIRED)
     List<Procedure> procedureList
 ) {
