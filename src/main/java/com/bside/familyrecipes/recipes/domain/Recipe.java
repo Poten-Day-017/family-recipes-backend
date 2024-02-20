@@ -12,7 +12,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "\"User\"")
+@Table(name = "\"Recipe\"")
 public class Recipe {
 
     @Id
