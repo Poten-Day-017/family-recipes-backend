@@ -7,7 +7,12 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 @Configuration
 public class AuthConfig {
-
     @Value("${jwt.secret}")
     private String jwtSecretKey;
+
+    @Value("${kakao.redirect.uri}")
+    private String kakaoRedirectUri;
+
+    @Value("${kakao.client.secret}")
+    private String kakaoClientSecret;
 }

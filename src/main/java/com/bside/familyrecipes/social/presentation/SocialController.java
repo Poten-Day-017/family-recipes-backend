@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/v1/social")
 public class SocialController {
     private final SocialServiceProvider socialServiceProvider;
-    private final SocialCommonService socialCommonService;
 
     @PostMapping("/login")
     public ResponseEntity<SocialLoginResponseDTO> login(@RequestBody SocialLoginRequestDTO request) {

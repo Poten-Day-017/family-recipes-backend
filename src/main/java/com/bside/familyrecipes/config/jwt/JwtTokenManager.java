@@ -25,6 +25,7 @@ public class JwtTokenManager {
     private final AuthConfig authConfig;
     private final ZoneId KST = ZoneId.of("Asia/Seoul");
 
+
     public String createAccessToken(Long userId) {
         val signatureAlgorithm = SignatureAlgorithm.HS256;
         val secretKeyBytes = DatatypeConverter.parseBase64Binary(authConfig.getJwtSecretKey());
@@ -51,26 +52,16 @@ public class JwtTokenManager {
                 .compact();
     }
 
-    public boolean verifyAuthToken (String token) {
+    public boolean verifyAuthToken(String token) {
         try {
             getClaimsFromToken(token);
             return true;
-        } catch (SignatureException | ExpiredJwtException e) {
+        } catch ( SignatureException | ExpiredJwtException e ) {
             return false;
         }
     }
 
-    public String getUserIdFromAuthToken (String token) {
-        try {
-            val claims = getClaimsFromToken(token);
-
-            return claims.getSubject();
-        } catch (SignatureException | ExpiredJwtException e) {
-            throw new AuthException(ExceptionMessage.INVALID_TOKEN.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    private Claims getClaimsFromToken (String token) throws SignatureException {
+    private Claims getClaimsFromToken(String token) throws SignatureException {
         return Jwts.parserBuilder()
                 .setSigningKey(DatatypeConverter.parseBase64Binary(authConfig.getJwtSecretKey()))
                 .build()

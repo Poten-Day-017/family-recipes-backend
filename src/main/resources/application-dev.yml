@@ -23,3 +23,9 @@ springdoc:
 
 familyRecipeBook:
   version: 1.0.0
+
+kakao:
+  client:
+    secret: 574a3f593b5ce0d62993e66d68168587
+  redirect:
+    uri: http://localhost:8080/kakao/callback
