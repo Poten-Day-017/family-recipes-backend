@@ -23,8 +23,10 @@ public record RecipeListResponse(
 ) {
 
     public record RecipeList(
+        @Schema(description = "레시피 순번", requiredMode = REQUIRED)
+        Integer order,
         @Schema(description = "레시피 아이디", requiredMode = REQUIRED)
-        long recipeId,
+        Long recipeId,
         @Schema(description = "레시피 제목", requiredMode = REQUIRED)
         String title,
         @Schema(description = "레시피 주인", requiredMode = REQUIRED)
@@ -40,12 +42,14 @@ public record RecipeListResponse(
         @Schema(description = "레시피 공개여부", requiredMode = REQUIRED)
         String totalOpenYn,
         @Schema(description = "요리 대표 사진 URL", requiredMode = REQUIRED)
-        String cookingImageUrl
+        String cookingImageUrl,
+        @Schema(description = "레시피 등록일", requiredMode = REQUIRED)
+        String createdAt
     ) {
         public RecipeList(Recipe recipe) {
-            this(recipe.getId(), recipe.getTitle(), recipe.getOrigin(), recipe.getContent(), recipe.getCategory().getValue(),
+            this(recipe.getOrderNo(), recipe.getId(), recipe.getTitle(), recipe.getOrigin(), recipe.getContent(), recipe.getCategory().getValue(),
                 recipe.getCategory().getName(),
-                recipe.getCapacity(), recipe.getTotalOpenYn(), recipe.getCookingImageUrl());
+                recipe.getCapacity(), recipe.getTotalOpenYn(), recipe.getCookingImageUrl(), recipe.getFormattedCreatedAt());
         }
     }
 
