@@ -6,6 +6,7 @@ import com.bside.familyrecipes.social.application.SocialServiceProvider;
 import com.bside.familyrecipes.social.dto.request.SocialLoginRequestDTO;
 
 import com.bside.familyrecipes.social.dto.response.SocialLoginResponseDTO;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ public class SocialController {
     private final SocialServiceProvider socialServiceProvider;
 
     @PostMapping("/login")
+    @Operation(description = "소셜로그인")
     public ResponseEntity<SocialLoginResponseDTO> login(@RequestBody SocialLoginRequestDTO request) {
         val socialService = socialServiceProvider.getSocialService(request.providerType());
         val response = socialService.login(request);
