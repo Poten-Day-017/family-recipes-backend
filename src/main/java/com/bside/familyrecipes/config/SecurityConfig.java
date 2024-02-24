@@ -42,7 +42,7 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(request ->
-                request.requestMatchers("/api/v1/recipes/**").permitAll()
+                request.requestMatchers("/api/v1/**").permitAll()
                     .anyRequest().authenticated()
             )
             .exceptionHandling(configurer -> {
