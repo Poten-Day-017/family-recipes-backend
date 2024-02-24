@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.bside.familyrecipes.recipes.domain.Category;
 import com.bside.familyrecipes.recipes.domain.Recipe;
+import com.bside.familyrecipes.users.domain.User;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -62,9 +63,10 @@ public record RecipeCreateRequest(
         }
     }
 
-    public Recipe toEntity() {
+    public Recipe toEntity(User user) {
         var recipe = Recipe.builder()
             .title(this.title)
+            .user(user)
             .origin(this.origin)
             .content(this.content)
             .category(Category.getByValue(this.category))

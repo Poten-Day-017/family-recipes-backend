@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.bside.familyrecipes.common.domain.BaseEntity;
 import com.bside.familyrecipes.recipes.converter.CategoryAttributeConverter;
+import com.bside.familyrecipes.users.domain.User;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -25,8 +26,9 @@ public class Recipe extends BaseEntity {
 
     private Integer orderNo;
 
-    // FIXME User Entity
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(length = 1000)
     private String cookingImageUrl;
@@ -58,11 +60,11 @@ public class Recipe extends BaseEntity {
     private final List<Procedure> procedureList = new ArrayList<>();
 
     @Builder
-    public Recipe(Long id, Integer orderNo, Long userId, String cookingImageUrl, String cookingVideoUrl, String title, String origin,
+    public Recipe(Long id, Integer orderNo, User user, String cookingImageUrl, String cookingVideoUrl, String title, String origin,
         String content, Category category, Integer capacity, String totalOpenYn) {
         this.id = id;
         this.orderNo = orderNo;
-        this.userId = userId;
+        this.user = user;
         this.cookingImageUrl = cookingImageUrl;
         this.cookingVideoUrl = cookingVideoUrl;
         this.title = title;

@@ -18,6 +18,7 @@ import com.bside.familyrecipes.recipes.dto.request.RecipeCreateRequest;
 import com.bside.familyrecipes.recipes.repository.IngredientRepository;
 import com.bside.familyrecipes.recipes.repository.ProcedureRepository;
 import com.bside.familyrecipes.recipes.repository.RecipeRepository;
+import com.bside.familyrecipes.users.domain.User;
 
 import lombok.RequiredArgsConstructor;
 
@@ -49,16 +50,16 @@ public class RecipeService {
     }
 
     @Transactional
-    public Long saveRecipe(Long userId, RecipeCreateRequest recipeCreateRequest, Map<String, String> storedFiles) {
+    public Long saveRecipe(User user, RecipeCreateRequest recipeCreateRequest, Map<String, String> storedFiles) {
 
-        var recipeList = findRecipeList(userId, PageRequest.of(0, 1, Sort.by("createdAt").descending()));
+        var recipeList = findRecipeList(user.getId(), PageRequest.of(0, 1, Sort.by("createdAt").descending()));
 
         var orderNo = recipeList.get()
             .map(recipe -> recipe.getOrderNo() + 1)
             .findFirst()
             .orElse(1);
 
-        var recipe = recipeCreateRequest.toEntity();
+        var recipe = recipeCreateRequest.toEntity(user);
 
         recipe.updateOrder(orderNo);
         recipe.updateFileUrl(storedFiles);

@@ -1,3 +1,5 @@
+INSERT INTO users(user_id, device_token, user_nickname) VALUES (1, 'asdf', '테스트 사용자1');
+
 INSERT INTO recipe(capacity, order_no, cooking_image_url, cooking_video_url, created_at, created_by, modified_at, modified_by, user_id, origin, title, content, category, total_open_yn)
 VALUES (1, 1, 'http://www.daedaesonson.site/static/sample1.jpg', '', NOW(), 1, NOW(), 1, 1, '엄마', '어머니의 김치찌개', '레시피 소개 샘플', '001', 'Y');
 
