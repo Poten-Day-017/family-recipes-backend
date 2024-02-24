@@ -54,13 +54,59 @@ public class RecipeController {
         return ResponseDto.ok(recipeFacade.getRecipeDetail(1L, recipeId));
     }
 
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    @Operation(summary = "레시피를 등록한다")
-    @RequestBody(content = @Content(
-        schema=@Schema(implementation = RecipeCreateRequest.class)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "레시피를 등록한다",
+        description = """
+            curl --location '{{서버도메인}}/api/v1/recipes'
+            --form 'recipeCreateRequest="{
+              \\\\"title\\\\": \\\\"어머니의 김치찌개\\\\",
+              \\\\"origin\\\\": \\\\"어머니\\\\",
+              \\\\"content\\\\": \\\\"가족의 레시피를 간단하게 1줄로 소개해보세요.\\\\",
+              \\\\"category\\\\": \\\\"CTGR_001\\\\",
+              \\\\"capacity\\\\": 2,
+              \\\\"totalOpenYn\\\\": \\\\"Y\\\\",
+              \\\\"ingredientList\\\\": [
+                {
+                  \\\\"order\\\\": 1,
+                  \\\\"name\\\\": \\\\"채끝살\\\\",
+                  \\\\"amount\\\\": \\\\"300g\\\\"
+                }
+              ],
+              \\\\"secretIngredientList\\\\": [
+                {
+                  \\\\"order\\\\": 1,
+                  \\\\"name\\\\": \\\\"채끝살\\\\",
+                  \\\\"amount\\\\": \\\\"300g\\\\"
+                }
+              ],
+              \\\\"procedureList\\\\": [
+                {
+                  \\\\"order\\\\": 1,
+                  \\\\"description\\\\": \\\\"쌀은 씻어 30분간 불린다. 쪽파는 송송 썰어 둔다.\\\\"
+                }
+              ]
+            }";type=application/json'
+            --form '파일명=@"파일 실제 경로"'
+            """,
+        requestBody= @RequestBody(content =
+    @Content(
+        schema = @Schema(implementation = RecipeCreateRequest.class),
+        mediaType = MediaType.APPLICATION_JSON_VALUE
     ))
-    public ResponseEntity<Long> saveRecipe(@RequestPart RecipeCreateRequest recipeCreateRequest,
-        @RequestPart("file") Map<String, MultipartFile> multipartFileMap) {
+        // ,
+        // parameters = @Parameter(
+        //     content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE),
+        //     schema = @Schema(type = "string", format = "binary")
+        // )
+    )
+
+    public ResponseEntity<Long> saveRecipe(
+        @RequestPart RecipeCreateRequest recipeCreateRequest,
+        // @Parameter(
+        //     content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE),
+        //     schema = @Schema(type = "object")
+        // )
+        @RequestParam(required = false) Map<String, MultipartFile> multipartFileMap) {
         return ResponseDto.ok(recipeFacade.saveRecipe(1L, recipeCreateRequest, multipartFileMap));
     }
 

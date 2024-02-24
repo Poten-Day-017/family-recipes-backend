@@ -9,8 +9,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum Category {
 
-    SOUP_NOODLE("탕/면", "CTGR_001"),
-    ETC("기타", "CTGR_999"),
+    KOREAN("한식", "001"),
+    CHINESE("중식", "002"),
+    WESTERN("양식", "003"),
+    JAPANESE("일식", "004"),
+    SNACKBAR("분식", "005"),
+    DESSERT("디저트", "006"),
+    ETC("기타", "999"),
     ;
     private final String name;
     private final String value;

@@ -11,6 +11,7 @@ import com.bside.familyrecipes.recipes.dto.request.RecipeCreateRequest;
 import com.bside.familyrecipes.recipes.dto.response.RecipeCategoryResponse;
 import com.bside.familyrecipes.recipes.dto.response.RecipeDetailResponse;
 import com.bside.familyrecipes.recipes.dto.response.RecipeListResponse;
+import com.bside.familyrecipes.storage.application.StorageService;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,11 +21,15 @@ import lombok.RequiredArgsConstructor;
 public class RecipeFacade {
 
     private final RecipeService recipeService;
+    private final StorageService storageService;
 
     @Transactional
     public Long saveRecipe(Long userId, RecipeCreateRequest recipeCreateRequest,
         Map<String, MultipartFile> multipartFileMap) {
-        return null;
+
+        Map<String, String> storedFiles = storageService.storeFiles(multipartFileMap);
+
+        return recipeService.saveRecipe(userId, recipeCreateRequest, storedFiles);
     }
 
     public RecipeListResponse findRecipeList(Long userId, Pageable pageable) {
