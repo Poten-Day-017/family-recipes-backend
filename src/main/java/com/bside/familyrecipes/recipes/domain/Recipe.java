@@ -102,7 +102,7 @@ public class Recipe extends BaseEntity {
 
         for (Procedure procedure : procedureList) {
             var orderNo1 = procedure.getOrderNo();
-            procedure.setImageUrl("procedureImage%d".formatted(orderNo1));
+            procedure.setImageUrl(storedFiles.get("procedureImage%d".formatted(orderNo1)));
         }
     }
 
