@@ -23,6 +23,7 @@ public class GlobalExceptionHandler {
             .status(e.getHttpStatus())
             .body(new ErrorDto(e.getMessage()));
     }
+
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorDto> handleException(final Exception e, final HttpServletRequest request) {
         log.error("[ERROR] RequestURL: {}\n", request.getRequestURL(), e);
@@ -30,4 +31,12 @@ public class GlobalExceptionHandler {
             .status(INTERNAL_ERROR.getHttpStatus())
             .body(new ErrorDto(INTERNAL_ERROR.getMessage()));
     }
+
+//    @ExceptionHandler(RuntimeException.class)
+//    protected ResponseEntity<ErrorDto> handleException(final Exception e, final HttpServletRequest request) {
+//        log.error("[ERROR] RequestURL: {}\n", request.getRequestURL(), e);
+//        return ResponseEntity
+//                .status(INTERNAL_ERROR.getHttpStatus())
+//                .body(new ErrorDto(INTERNAL_ERROR.getMessage()));
+//    }
 }
