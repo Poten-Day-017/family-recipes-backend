@@ -3,7 +3,9 @@ package com.bside.familyrecipes.recipes.dto.request;
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import com.bside.familyrecipes.recipes.domain.Category;
 import com.bside.familyrecipes.recipes.domain.Recipe;
@@ -74,15 +76,18 @@ public record RecipeCreateRequest(
             .totalOpenYn(this.totalOpenYn)
             .build();
 
-        var ingredientEntityList = new ArrayList<>(this.ingredientList.stream()
+        var ingredientEntityList = new ArrayList<>(Optional.ofNullable(this.ingredientList)
+            .orElseGet(Collections::emptyList).stream()
             .map(ingredient -> ingredient.toEntity("Y")).toList());
 
-        this.secretIngredientList.forEach(ingredient -> {
+        Optional.ofNullable(this.secretIngredientList)
+            .orElseGet(Collections::emptyList).forEach(ingredient -> {
             var entity = ingredient.toEntity("N");
             ingredientEntityList.add(entity);
         });
 
-        var procedureList = this.procedureList.stream().map(Procedure::toEntity).toList();
+        var procedureList = Optional.ofNullable(this.procedureList)
+            .orElseGet(Collections::emptyList).stream().map(Procedure::toEntity).toList();
 
         recipe.setDetailInfo(ingredientEntityList, procedureList);
 
