@@ -1,31 +1,40 @@
-jwt:
-  secret: ZGFlZGFlc29uc29uLW9mLXBvdGVuZGF5LWp3dC1zZWNyZXQta2V5Cg==
-
-server:
-  port: 8080
-
 spring:
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-    datasource:
-      driver-class-name: org.h2.Driver
-      url: jdbc:h2~/test
-      username: sa
-      password:
-
-springdoc:
-  swagger-ui:
-    disable-swagger-default-url: true
-  default-consumes-media-type: application/json
-  default-produces-media-type: application/json
-
-familyRecipeBook:
-  version: 1.0.0
+  config:
+    activate:
+      on-profile: dev
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2-console
+#    datasource:
+#      driver-class-name: org.h2.Driver
+#      url: jdbc:h2~/test
+#      username: sa
+#      password:
+  datasource:
+    url: jdbc:h2:mem:test
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+    defer-datasource-initialization: true
+    database-platform: org.hibernate.dialect.H2Dialect
+  sql:
+    init:
+      data-locations: classpath*:sql/init-data.sql
+      mode: embedded
 
 kakao:
   client:
-    secret: 574a3f593b5ce0d62993e66d68168587
+    secret:
   redirect:
     uri: http://localhost:8080/kakao/callback
+jwt:
+  secret:
