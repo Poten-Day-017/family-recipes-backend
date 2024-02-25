@@ -38,6 +38,11 @@ public class Ingredient extends BaseEntity {
     @JoinColumn(name = "recipe_id")
     private Recipe recipe;
 
+
     @Column(columnDefinition = "char(1) default 'N'")
     private String requiredYn;
+
+    public void setRecipe(Recipe recipe) {
+        this.recipe = recipe;
+    }
 }

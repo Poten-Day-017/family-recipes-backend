@@ -1,8 +1,19 @@
-spring:
-  profiles:
-    active: prod
----
+server:
+  port: 8080
+  tomcat:
+    max-http-form-post-size: 1GB
+
+springdoc:
+  swagger-ui:
+    disable-swagger-default-url: true
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+
+familyRecipeBook:
+  version: 1.0.0
 
 spring:
-  profiles:
-    active: dev
+  servlet:
+    multipart:
+      max-file-size: 1GB
+      max-request-size: 1GB

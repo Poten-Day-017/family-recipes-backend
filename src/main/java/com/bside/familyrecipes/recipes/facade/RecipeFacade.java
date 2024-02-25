@@ -6,11 +6,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.bside.familyrecipes.error.exception.UserNotFoundException;
 import com.bside.familyrecipes.recipes.application.RecipeService;
 import com.bside.familyrecipes.recipes.dto.request.RecipeCreateRequest;
 import com.bside.familyrecipes.recipes.dto.response.RecipeCategoryResponse;
 import com.bside.familyrecipes.recipes.dto.response.RecipeDetailResponse;
 import com.bside.familyrecipes.recipes.dto.response.RecipeListResponse;
+import com.bside.familyrecipes.storage.application.StorageService;
+import com.bside.familyrecipes.users.application.UserRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,11 +23,18 @@ import lombok.RequiredArgsConstructor;
 public class RecipeFacade {
 
     private final RecipeService recipeService;
+    private final StorageService storageService;
+    private final UserRepository userRepository;
 
     @Transactional
     public Long saveRecipe(Long userId, RecipeCreateRequest recipeCreateRequest,
         Map<String, MultipartFile> multipartFileMap) {
-        return null;
+
+        var user = userRepository.getUserById(userId).orElseThrow(UserNotFoundException::new);
+
+        Map<String, String> storedFiles = storageService.storeFiles(multipartFileMap);
+
+        return recipeService.saveRecipe(user, recipeCreateRequest, storedFiles);
     }
 
     public RecipeListResponse findRecipeList(Long userId, Pageable pageable) {
