@@ -3,6 +3,8 @@ package com.bside.familyrecipes.error;
 import static com.bside.familyrecipes.error.ErrorType.*;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -22,6 +24,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity
             .status(e.getHttpStatus())
             .body(new ErrorDto(e.getMessage()));
+    }
+
+    @ExceptionHandler({HttpMessageNotReadableException.class, HttpRequestMethodNotSupportedException.class})
+    protected ResponseEntity<ErrorDto> handleHttpRequestMethodNotSupportedException(final Exception e,
+        final HttpServletRequest request) {
+        log.error("[ERROR] RequestURL: {}\n", request.getRequestURL(), e);
+        return ResponseEntity
+            .status(BAD_REQUEST_EXCEPTION.getHttpStatus())
+            .body(new ErrorDto(BAD_REQUEST_EXCEPTION.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)

@@ -1,4 +1,4 @@
-package com.bside.familyrecipes.storage.application;
+package com.bside.familyrecipes.recipes.application;
 
 import java.io.IOException;
 import java.nio.file.Files;

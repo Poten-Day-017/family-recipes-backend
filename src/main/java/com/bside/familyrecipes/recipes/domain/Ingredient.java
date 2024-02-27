@@ -14,10 +14,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Getter
 @Builder
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Ingredient extends BaseEntity {
@@ -36,6 +38,7 @@ public class Ingredient extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "recipe_id")
+    @ToString.Exclude
     private Recipe recipe;
 
 
@@ -44,5 +47,10 @@ public class Ingredient extends BaseEntity {
 
     public void setRecipe(Recipe recipe) {
         this.recipe = recipe;
+    }
+
+    public void update(Ingredient ingredient) {
+        this.name = ingredient.name;
+        this.amount = ingredient.amount;
     }
 }
