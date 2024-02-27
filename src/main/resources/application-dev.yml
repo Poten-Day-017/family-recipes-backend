@@ -38,3 +38,5 @@ kakao:
     uri: http://localhost:8080/kakao/callback
 jwt:
   secret:
+server:
+  url: http://localhost:8080
