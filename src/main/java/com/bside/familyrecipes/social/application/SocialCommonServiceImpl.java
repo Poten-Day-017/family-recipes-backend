@@ -3,6 +3,7 @@ package com.bside.familyrecipes.social.application;
 import com.bside.familyrecipes.config.AppConfig;
 import com.bside.familyrecipes.config.jwt.JwtTokenManager;
 import com.bside.familyrecipes.social.domain.AuthProvider;
+import com.bside.familyrecipes.social.dto.request.SocialLoginRequestDTO;
 import com.bside.familyrecipes.social.dto.response.SocialLoginResponseDTO;
 import com.bside.familyrecipes.social.enums.ProviderType;
 import com.bside.familyrecipes.users.application.UserRepository;
@@ -23,13 +24,23 @@ public class SocialCommonServiceImpl implements SocialCommonService{
     private final AuthProviderRepository authProviderRepository;
     private final AppConfig appConfig;
 
+    private SocialLoginResponseDTO reLogin(User user, String deviceToken) {
+        val userId = user.getId();
+        val accessToken = jwtTokenManager.createAccessToken(userId);
+        val refreshToken = jwtTokenManager.createRefreshToken(userId);
+
+        saveDeviceToken(user, deviceToken);
+
+        return SocialLoginResponseDTO.of(true, userId, accessToken, refreshToken, appConfig.getAppVersion());
+    }
+
     @Transactional
     private SocialLoginResponseDTO SignUpAndLogin(
-            String thirdPartyUserId,
-            ProviderType providerType,
-            String deviceToken
+            SocialLoginRequestDTO socialLoginRequestDTO
     ) {
         val user = userRepository.save(User.builder()
+                        .userNickname(socialLoginRequestDTO.name())
+                        .profileImage(socialLoginRequestDTO.picture())
                 .build());
 
         val userId = user.getId();
@@ -37,12 +48,12 @@ public class SocialCommonServiceImpl implements SocialCommonService{
         val refreshToken = jwtTokenManager.createRefreshToken(userId);
 
         authProviderRepository.save(AuthProvider.builder()
-                .id(thirdPartyUserId)
+                .id(socialLoginRequestDTO.email())
                 .user(user)
-                .providerType(providerType)
+                .providerType(socialLoginRequestDTO.providerType())
                 .build());
 
-        saveDeviceToken(user, deviceToken);
+        saveDeviceToken(user, socialLoginRequestDTO.deviceToken());
 
         return SocialLoginResponseDTO.of( false, userId, accessToken, refreshToken, appConfig.getAppVersion());
     }
@@ -53,8 +64,13 @@ public class SocialCommonServiceImpl implements SocialCommonService{
 
     @Override
     @Transactional
-    public SocialLoginResponseDTO DaeDaeSonSonLogin(String thirdPartyUserId, ProviderType providerType, String deviceToken) {
+    public SocialLoginResponseDTO DaeDaeSonSonLogin(SocialLoginRequestDTO socialLoginRequestDTO) {
+        val authProvider = authProviderRepository.searchAuthProviderById(socialLoginRequestDTO.email());
 
-        return SignUpAndLogin(thirdPartyUserId, providerType, deviceToken);
+        if(Objects.nonNull(authProvider)) {
+            return reLogin(authProvider.getUser(), socialLoginRequestDTO.deviceToken());
+        }
+
+        return SignUpAndLogin(socialLoginRequestDTO);
     }
 }

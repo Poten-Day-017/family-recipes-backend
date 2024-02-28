@@ -29,12 +29,16 @@ public class User {
     @Column(name = "user_nickname")
     private String userNickname;
 
+    @Column(name = "user_profile_image")
+    private String profileImage;
+
     @OneToMany(mappedBy = "user")
     List<Recipe> recipes = new ArrayList<>();
 
     @Builder
-    public User(String userNickname){
+    public User(String userNickname, String profileImage){
         this.userNickname = userNickname;
+        this.profileImage = profileImage;
     }
 
     public void updateDeviceToken(String deviceToken) {

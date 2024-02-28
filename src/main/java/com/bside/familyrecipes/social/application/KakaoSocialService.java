@@ -23,17 +23,8 @@ public class KakaoSocialService implements SocialService {
 
     @Override
     public SocialLoginResponseDTO login(SocialLoginRequestDTO socialLoginRequestDTO) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + socialLoginRequestDTO.token());
-
-        HttpEntity<SocialLoginRequestDTO> requestEntity =
-                new HttpEntity<>(socialLoginRequestDTO, headers);
-
-        ResponseEntity<String> response = restTemplate.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.GET, requestEntity, String.class);
-
         try {
-            SocialLoginResponseDTO result = objectMapper.readValue(response.getBody(), SocialLoginResponseDTO.class);
-            return socialCommonService.DaeDaeSonSonLogin(String.valueOf(result.id()), socialLoginRequestDTO.providerType(), socialLoginRequestDTO.deviceToken());
+            return socialCommonService.DaeDaeSonSonLogin(socialLoginRequestDTO);
         } catch (Exception e) {
             log.error("소셜 로그인 중 에러 = {}, 에러 메시지 = {}", e.getClass(), e.getMessage());
             throw new RuntimeException("응답을 SocialLoginResponseDTO로 변환하는 데 실패했습니다.", e);
