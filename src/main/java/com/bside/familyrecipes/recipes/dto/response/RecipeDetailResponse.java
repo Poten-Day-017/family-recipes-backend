@@ -28,8 +28,10 @@ public record RecipeDetailResponse(
     String categoryName,
     @Schema(description = "레시피 기준 인원", requiredMode = NOT_REQUIRED)
     Integer capacity,
-    @Schema(description = "레시피 공개여부", requiredMode = NOT_REQUIRED)
+    @Schema(description = "레시피 공개여부 (삭제예정)", requiredMode = NOT_REQUIRED)
     String totalOpenYn,
+    @Schema(description = "레시피 공개여부", requiredMode = NOT_REQUIRED)
+    Boolean isOpen,
     @Schema(description = "영상 URL", requiredMode = REQUIRED)
     String cookingVideoUrl,
     @Schema(description = "대표 사진 URL", requiredMode = REQUIRED)
@@ -75,7 +77,7 @@ public record RecipeDetailResponse(
             recipe.getCategory().getValue(),
             recipe.getCategory()
                 .getName(), recipe.getCapacity(),
-            recipe.getTotalOpenYn(), recipe.getCookingVideoUrl(), recipe.getCookingImageUrl(),
+            recipe.getTotalOpenYn(), "Y".equals(recipe.getTotalOpenYn()), recipe.getCookingVideoUrl(), recipe.getCookingImageUrl(),
             recipe.getFormattedCreatedAt(),
             recipe.findIngredientList().stream().map(IngredientDto::new).toList(),
             recipe.findSecretIngredientList().stream().map(IngredientDto::new).toList(),
