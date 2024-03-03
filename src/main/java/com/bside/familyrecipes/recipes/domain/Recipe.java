@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.util.StringUtils;
+
 import com.bside.familyrecipes.common.domain.BaseEntity;
 import com.bside.familyrecipes.recipes.converter.CategoryAttributeConverter;
 import com.bside.familyrecipes.users.domain.User;
@@ -14,8 +16,12 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Recipe extends BaseEntity {
@@ -53,10 +59,16 @@ public class Recipe extends BaseEntity {
     @Column(columnDefinition = "char(1) default 'Y'")
     private String totalOpenYn;
 
-    @OneToMany(mappedBy = "recipe", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "recipe",
+        fetch = FetchType.LAZY,
+        cascade = CascadeType.PERSIST,
+        orphanRemoval = true)
     private final List<Ingredient> ingredientList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "recipe", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "recipe",
+        fetch = FetchType.LAZY,
+        cascade = CascadeType.PERSIST,
+        orphanRemoval = true)
     private final List<Procedure> procedureList = new ArrayList<>();
 
     @Builder
@@ -97,13 +109,16 @@ public class Recipe extends BaseEntity {
     }
 
     public void updateFileUrl(Map<String, String> storedFiles) {
-        this.cookingImageUrl = storedFiles.get("cookingImage");
-        this.cookingVideoUrl = storedFiles.get("cookingVideo");
 
-        for (Procedure procedure : procedureList) {
-            var orderNo1 = procedure.getOrderNo();
-            procedure.setImageUrl(storedFiles.get("procedureImage%d".formatted(orderNo1)));
+        if (!StringUtils.hasText(this.cookingImageUrl)) {
+            this.cookingImageUrl = storedFiles.get("cookingImage");
         }
+
+        if (!StringUtils.hasText(this.cookingImageUrl)) {
+            this.cookingVideoUrl = storedFiles.get("cookingVideo");
+        }
+
+        this.procedureList.forEach(procedure -> procedure.updateImageUrl(storedFiles));
     }
 
     public String getFormattedCreatedAt() {
@@ -127,6 +142,65 @@ public class Recipe extends BaseEntity {
         }
 
         this.procedureList.add(procedure);
+    }
+
+    public void update(Recipe requestEntity) {
+        this.title = requestEntity.getTitle();
+        this.content = requestEntity.getContent();
+        this.cookingImageUrl = requestEntity.getCookingImageUrl();
+        this.cookingVideoUrl = requestEntity.getCookingVideoUrl();
+        this.origin = requestEntity.getOrigin();
+        this.category = requestEntity.getCategory();
+        this.capacity = requestEntity.getCapacity();
+        this.totalOpenYn = requestEntity.getTotalOpenYn();
+
+        updateProcedureList(requestEntity);
+        updateIngredientList(requestEntity);
+    }
+
+    private void updateIngredientList(Recipe requestEntity) {
+        this.ingredientList.removeIf(ingredient1 ->
+            requestEntity.getIngredientList().stream()
+                .filter(requestIngredient -> requestIngredient.getOrderNo().equals(ingredient1.getOrderNo())
+                    && requestIngredient.getRequiredYn().equals(ingredient1.getRequiredYn()))
+                .findFirst().isEmpty());
+
+        this.ingredientList.forEach(ingredient1 -> {
+            var first = requestEntity.getIngredientList().stream()
+                .filter(requestIngredient -> requestIngredient.getOrderNo().equals(ingredient1.getOrderNo())
+                    && requestIngredient.getRequiredYn().equals(ingredient1.getRequiredYn()))
+                .findFirst();
+            if (first.isEmpty()) {
+                return;
+            }
+            var i = first.get();
+            ingredient1.update(i);
+            requestEntity.ingredientList.remove(i);
+        });
+
+        requestEntity.ingredientList.forEach(this::addIngredientList);
+    }
+
+    private void updateProcedureList(Recipe requestEntity) {
+        this.procedureList.removeIf(procedure1 ->
+            requestEntity.getProcedureList()
+                .stream()
+                .filter(requestProcedure -> requestProcedure.getOrderNo().equals(procedure1.getOrderNo()))
+                .findAny().isEmpty());
+
+        this.procedureList.forEach(procedure1 -> {
+            var first = requestEntity.getProcedureList().stream()
+                .filter(requestProcedure -> requestProcedure.getOrderNo().equals(procedure1.getOrderNo()))
+                .findFirst();
+            if (first.isEmpty()) {
+                return;
+            }
+            var p = first.get();
+            procedure1.update(p);
+            requestEntity.procedureList.remove(p);
+        });
+
+        requestEntity.procedureList.forEach(this::addProcedureList);
     }
 
 }

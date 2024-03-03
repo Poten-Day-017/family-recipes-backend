@@ -36,7 +36,7 @@ public class RecipeService {
     }
 
     @Transactional
-    public Recipe findRecipeById(Long userId, Long recipeId) {
+    public Recipe findRecipeById(Long recipeId) {
         var recipe = recipeRepository.findById(recipeId).orElseThrow(RecipeNotFoundException::new);
         var ingredientList = ingredientRepository.findAllByRecipeId(recipeId);
         var procedureList = procedureRepository.findAllByRecipeId(recipeId);
@@ -50,18 +50,19 @@ public class RecipeService {
     }
 
     @Transactional
-    public Long saveRecipe(User user, RecipeCreateRequest recipeCreateRequest, Map<String, String> storedFiles) {
+    public Long saveRecipe(User user, Recipe recipe, Map<String, String> storedFiles) {
 
-        var recipeList = findRecipeList(user.getId(), PageRequest.of(0, 1, Sort.by("createdAt").descending()));
+        if (recipe.getOrderNo() == null) {
+            var recipeList = findRecipeList(user.getId(), PageRequest.of(0, 1, Sort.by("createdAt").descending()));
 
-        var orderNo = recipeList.get()
-            .map(recipe -> recipe.getOrderNo() + 1)
-            .findFirst()
-            .orElse(1);
+            var orderNo = recipeList.get()
+                .map(recipe1 -> recipe1.getOrderNo() + 1)
+                .findFirst()
+                .orElse(1);
 
-        var recipe = recipeCreateRequest.toEntity(user);
+            recipe.updateOrder(orderNo);
+        }
 
-        recipe.updateOrder(orderNo);
         recipe.updateFileUrl(storedFiles);
 
         recipeRepository.save(recipe);
@@ -69,5 +70,22 @@ public class RecipeService {
         procedureRepository.saveAll(recipe.getProcedureList());
 
         return recipe.getId();
+    }
+
+    @Transactional
+    public List<Recipe> findRecipeByUserAndOrderNoGreaterThan(User user, Integer orderNo) {
+        return recipeRepository.findRecipeByUserAndOrderNoGreaterThan(user, orderNo);
+    }
+
+    @Transactional
+    public void saveAll(List<Recipe> recipes) {
+        recipeRepository.saveAll(recipes);
+    }
+
+    @Transactional
+    public void deleteRecipe(Recipe recipe) {
+        procedureRepository.deleteAll(recipe.getProcedureList());
+        ingredientRepository.deleteAll(recipe.getIngredientList());
+        recipeRepository.delete(recipe);
     }
 }

@@ -7,9 +7,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -18,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.bside.familyrecipes.common.dto.response.ResponseDto;
 import com.bside.familyrecipes.recipes.dto.request.RecipeCreateRequest;
+import com.bside.familyrecipes.recipes.dto.request.RecipeUpdateRequest;
 import com.bside.familyrecipes.recipes.dto.response.RecipeCategoryResponse;
 import com.bside.familyrecipes.recipes.dto.response.RecipeDetailResponse;
 import com.bside.familyrecipes.recipes.dto.response.RecipeListResponse;
@@ -88,26 +91,17 @@ public class RecipeController {
             }";type=application/json'
             --form '파일명=@"파일 실제 경로"'
             """,
-        requestBody= @RequestBody(content =
-    @Content(
-        schema = @Schema(implementation = RecipeCreateRequest.class),
-        mediaType = MediaType.APPLICATION_JSON_VALUE
-    ))
-        // ,
-        // parameters = @Parameter(
-        //     content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE),
-        //     schema = @Schema(type = "string", format = "binary")
-        // )
+        requestBody = @RequestBody(content =
+        @Content(
+            schema = @Schema(implementation = RecipeCreateRequest.class),
+            mediaType = MediaType.APPLICATION_JSON_VALUE
+        ))
     )
 
     public ResponseEntity<Long> saveRecipe(
         @RequestPart RecipeCreateRequest recipeCreateRequest,
-        // @Parameter(
-        //     content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE),
-        //     schema = @Schema(type = "object")
-        // )
         @RequestParam(required = false) Map<String, MultipartFile> multipartFileMap) {
-        return ResponseDto.ok(recipeFacade.saveRecipe(1L, recipeCreateRequest, multipartFileMap));
+        return ResponseDto.ok(recipeFacade.createRecipe(1L, recipeCreateRequest, multipartFileMap));
     }
 
     @GetMapping("/category")
@@ -117,16 +111,19 @@ public class RecipeController {
     }
 
 
-    // @PutMapping("/{recipeId}")
-    // @Operation(description = "레시피를 수정한다")
-    // public String updateRecipe(@PathVariable Long recipeId) {
-    //     return "success";
-    // }
+    @PutMapping("/{recipeId}")
+    @Operation(summary = "레시피를 수정한다")
+    public ResponseEntity<Long> updateRecipe(@PathVariable Long recipeId,
+        @RequestPart RecipeUpdateRequest recipeUpdateRequest,
+        @RequestParam(required = false) Map<String, MultipartFile> multipartFileMap) {
+        return ResponseDto.ok(recipeFacade.updateRecipe(1L, recipeId, recipeUpdateRequest, multipartFileMap));
+    }
 
 
-    // @DeleteMapping("/{recipeId}")
-    // @Operation(description = "레시피를 삭제한다")
-    // public String deleteRecipe(@PathVariable Long recipeId) {
-    //     return "success";
-    // }
+    @DeleteMapping("/{recipeId}")
+    @Operation(summary = "레시피를 삭제한다")
+    public ResponseEntity<Long> deleteRecipe(@PathVariable Long recipeId) {
+        recipeFacade.deleteRecipe(1L, recipeId);
+        return ResponseDto.ok(recipeId);
+    }
 }
