@@ -1,5 +1,6 @@
 package com.bside.familyrecipes.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,15 +10,18 @@ import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
 
-@OpenAPIDefinition(info = @Info(title = "가족 레시피 북 API 명세서", version = "v1")
-)
+@OpenAPIDefinition(info = @Info(title = "가족 레시피 북 API 명세서", version = "v1"))
 @Configuration
 public class SwaggerConfig {
 
     public static final String JWT_PREFIX = "Bearer";
     public static final String JWT_TYPE = "JWT";
     public static final String AUTHORIZATION_HEADER = "Authorization";
+
+    @Value("${server.url}")
+    private String serverUrl;
 
     @Bean
     public OpenAPI openAPI() {
@@ -29,7 +33,8 @@ public class SwaggerConfig {
                         .scheme(JWT_PREFIX)
                         .bearerFormat(JWT_TYPE));
         return new OpenAPI()
-                .addSecurityItem(securityRequirement)
-                .components(components);
+            .addServersItem(new Server().url(serverUrl))
+            .addSecurityItem(securityRequirement)
+            .components(components);
     }
 }

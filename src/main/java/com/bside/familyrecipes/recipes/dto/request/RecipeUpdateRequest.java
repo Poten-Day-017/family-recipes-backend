@@ -15,8 +15,8 @@ import com.bside.familyrecipes.users.domain.User;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "레시피 등록 요청")
-public record RecipeCreateRequest(
+@Schema(description = "레시피 수정 요청")
+public record RecipeUpdateRequest(
     @Schema(description = "레시피 제목", requiredMode = REQUIRED, example = "어머니의 김치찌개")
     String title,
     @Schema(description = "레시피 주인", requiredMode = REQUIRED, example = "어머니")
@@ -29,11 +29,15 @@ public record RecipeCreateRequest(
     Integer capacity,
     @Schema(description = "레시피 공개여부", requiredMode = NOT_REQUIRED, example = "Y")
     String totalOpenYn,
-    @Schema(description = "필수 재료 리스트", requiredMode = REQUIRED)
+    @Schema(description = "영상 URL (파일 변경 또는 삭제시 빈값)", requiredMode = NOT_REQUIRED, example = "")
+    String cookingVideoUrl,
+    @Schema(description = "대표 사진 URL (이미지 변경 또는 삭제시 빈값)", requiredMode = NOT_REQUIRED, example = "http://www.daedaesonson.site/static/sample8.jpeg")
+    String cookingImageUrl,
+    @Schema(description = "요리 필수 재료 리스트", requiredMode = REQUIRED)
     List<IngredientDto> ingredientList,
-    @Schema(description = "비법 재료 리스트", requiredMode = NOT_REQUIRED)
+    @Schema(description = "요리 비법 재료 리스트", requiredMode = NOT_REQUIRED)
     List<IngredientDto> secretIngredientList,
-    @Schema(description = "레시피 조리 순서", requiredMode = REQUIRED)
+    @Schema(description = "요리 순서 리스트", requiredMode = REQUIRED)
     List<ProcedureDto> procedureList
 ) {
     public record IngredientDto(
@@ -56,6 +60,8 @@ public record RecipeCreateRequest(
     public record ProcedureDto(
         @Schema(description = "요리 순서 순번", requiredMode = REQUIRED, example = "1")
         Integer order,
+        @Schema(description = "요리 순서 사진 URL", requiredMode = NOT_REQUIRED, example = "http://www.daedaesonson.site/static/sample6.jpeg")
+        String imageUrl,
         @Schema(description = "요리 순서 설명", requiredMode = REQUIRED, example = "쌀은 씻어 30분간 불린다. 쪽파는 송송 썰어 둔다.")
         String description
     ) {
@@ -63,6 +69,7 @@ public record RecipeCreateRequest(
             return Procedure.builder()
                 .orderNo(this.order)
                 .description(this.description)
+                .imageUrl(this.imageUrl)
                 .build();
         }
     }
@@ -76,6 +83,8 @@ public record RecipeCreateRequest(
             .category(Category.getByValue(this.category))
             .capacity(this.capacity)
             .totalOpenYn(this.totalOpenYn)
+            .cookingImageUrl(this.cookingImageUrl)
+            .cookingVideoUrl(this.cookingVideoUrl)
             .build();
 
         var ingredientEntityList = new ArrayList<>(Optional.ofNullable(this.ingredientList)
