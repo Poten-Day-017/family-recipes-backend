@@ -67,7 +67,7 @@ public class RecipeController {
               \\\\"content\\\\": \\\\"가족의 레시피를 간단하게 1줄로 소개해보세요.\\\\",
               \\\\"category\\\\": \\\\"CTGR_001\\\\",
               \\\\"capacity\\\\": 2,
-              \\\\"totalOpenYn\\\\": \\\\"Y\\\\",
+              \\\\"isOpen\\\\": true,
               \\\\"ingredientList\\\\": [
                 {
                   \\\\"order\\\\": 1,
@@ -90,6 +90,11 @@ public class RecipeController {
               ]
             }";type=application/json'
             --form '파일명=@"파일 실제 경로"'
+            
+            [파일명]
+            cookingImage (요리 이미지)
+            cookingVideo (요리 영상)
+            procedureImage1, 2, 3 (요리 순서 이미지1,2,3 - orderNo와 동일하게)
             """,
         requestBody = @RequestBody(content =
         @Content(
@@ -98,10 +103,10 @@ public class RecipeController {
         ))
     )
 
-    public ResponseEntity<Long> saveRecipe(
+    public ResponseDto<Long> saveRecipe(
         @RequestPart RecipeCreateRequest recipeCreateRequest,
         @RequestParam(required = false) Map<String, MultipartFile> multipartFileMap) {
-        return ResponseDto.ok(recipeFacade.createRecipe(1L, recipeCreateRequest, multipartFileMap));
+        return ResponseDto.success(recipeFacade.createRecipe(1L, recipeCreateRequest, multipartFileMap));
     }
 
     @GetMapping("/category")
@@ -113,17 +118,17 @@ public class RecipeController {
 
     @PutMapping("/{recipeId}")
     @Operation(summary = "레시피를 수정한다")
-    public ResponseEntity<Long> updateRecipe(@PathVariable Long recipeId,
+    public ResponseDto<Long> updateRecipe(@PathVariable Long recipeId,
         @RequestPart RecipeUpdateRequest recipeUpdateRequest,
         @RequestParam(required = false) Map<String, MultipartFile> multipartFileMap) {
-        return ResponseDto.ok(recipeFacade.updateRecipe(1L, recipeId, recipeUpdateRequest, multipartFileMap));
+        return ResponseDto.success(recipeFacade.updateRecipe(1L, recipeId, recipeUpdateRequest, multipartFileMap));
     }
 
 
     @DeleteMapping("/{recipeId}")
     @Operation(summary = "레시피를 삭제한다")
-    public ResponseEntity<Long> deleteRecipe(@PathVariable Long recipeId) {
+    public ResponseDto<Long> deleteRecipe(@PathVariable Long recipeId) {
         recipeFacade.deleteRecipe(1L, recipeId);
-        return ResponseDto.ok(recipeId);
+        return ResponseDto.success(recipeId);
     }
 }
