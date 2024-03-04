@@ -77,7 +77,7 @@ public record RecipeDetailResponse(
             recipe.getCategory().getValue(),
             recipe.getCategory()
                 .getName(), recipe.getCapacity(),
-            recipe.getTotalOpenYn(), "Y".equals(recipe.getTotalOpenYn()), recipe.getCookingVideoUrl(), recipe.getCookingImageUrl(),
+            recipe.getTotalOpenYn(), !"N".equals(recipe.getTotalOpenYn()), recipe.getCookingVideoUrl(), recipe.getCookingImageUrl(),
             recipe.getFormattedCreatedAt(),
             recipe.findIngredientList().stream().map(IngredientDto::new).toList(),
             recipe.findSecretIngredientList().stream().map(IngredientDto::new).toList(),

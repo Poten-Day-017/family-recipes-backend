@@ -51,7 +51,7 @@ public record RecipeListResponse(
         public RecipeList(Recipe recipe) {
             this(recipe.getOrderNo(), recipe.getId(), recipe.getTitle(), recipe.getOrigin(), recipe.getContent(), recipe.getCategory().getValue(),
                 recipe.getCategory().getName(),
-                recipe.getCapacity(), recipe.getTotalOpenYn(), "Y".equals(recipe.getTotalOpenYn()), recipe.getCookingImageUrl(), recipe.getFormattedCreatedAt());
+                recipe.getCapacity(), recipe.getTotalOpenYn(), !"N".equals(recipe.getTotalOpenYn()), recipe.getCookingImageUrl(), recipe.getFormattedCreatedAt());
         }
     }
 
