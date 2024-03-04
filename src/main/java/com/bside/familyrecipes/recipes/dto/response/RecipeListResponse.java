@@ -39,7 +39,7 @@ public record RecipeListResponse(
         String categoryName,
         @Schema(description = "레시피 기준 인원", requiredMode = NOT_REQUIRED)
         Integer capacity,
-        @Schema(description = "레시피 공개여부 (삭제예정)", requiredMode = REQUIRED)
+        @Schema(description = "레시피 공개여부 (삭제예정)", requiredMode = REQUIRED, hidden = true)
         String totalOpenYn,
         @Schema(description = "레시피 공개여부", requiredMode = REQUIRED)
         Boolean isOpen,

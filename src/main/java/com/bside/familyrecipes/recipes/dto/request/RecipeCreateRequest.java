@@ -35,7 +35,7 @@ public record RecipeCreateRequest(
     String category,
     @Schema(description = "레시피 기준 인원", requiredMode = NOT_REQUIRED, example = "2")
     Integer capacity,
-    @Schema(description = "레시피 공개여부 (삭제예정)", requiredMode = NOT_REQUIRED, example = "Y")
+    @Schema(description = "레시피 공개여부 (삭제예정)", requiredMode = NOT_REQUIRED, example = "Y", hidden = true)
     String totalOpenYn,
     @Schema(description = "레시피 공개여부", requiredMode = NOT_REQUIRED, example = "true")
     Boolean isOpen,
