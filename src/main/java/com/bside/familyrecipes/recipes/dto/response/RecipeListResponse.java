@@ -39,8 +39,10 @@ public record RecipeListResponse(
         String categoryName,
         @Schema(description = "레시피 기준 인원", requiredMode = NOT_REQUIRED)
         Integer capacity,
-        @Schema(description = "레시피 공개여부", requiredMode = REQUIRED)
+        @Schema(description = "레시피 공개여부 (삭제예정)", requiredMode = REQUIRED, hidden = true)
         String totalOpenYn,
+        @Schema(description = "레시피 공개여부", requiredMode = REQUIRED)
+        Boolean isOpen,
         @Schema(description = "요리 대표 사진 URL", requiredMode = REQUIRED)
         String cookingImageUrl,
         @Schema(description = "레시피 등록일", requiredMode = REQUIRED)
@@ -49,7 +51,7 @@ public record RecipeListResponse(
         public RecipeList(Recipe recipe) {
             this(recipe.getOrderNo(), recipe.getId(), recipe.getTitle(), recipe.getOrigin(), recipe.getContent(), recipe.getCategory().getValue(),
                 recipe.getCategory().getName(),
-                recipe.getCapacity(), recipe.getTotalOpenYn(), recipe.getCookingImageUrl(), recipe.getFormattedCreatedAt());
+                recipe.getCapacity(), recipe.getTotalOpenYn(), !"N".equals(recipe.getTotalOpenYn()), recipe.getCookingImageUrl(), recipe.getFormattedCreatedAt());
         }
     }
 
