@@ -1,6 +1,7 @@
 package com.bside.familyrecipes.recipes.dto.request;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.*;
+import static java.lang.Boolean.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,21 +15,30 @@ import com.bside.familyrecipes.recipes.domain.Recipe;
 import com.bside.familyrecipes.users.domain.User;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Schema(description = "레시피 수정 요청")
 public record RecipeUpdateRequest(
+    @NotBlank(message = "레시피 제목을 작성해주세요.")
+    @Size(min = 2, max = 30, message = "레시피 제목을 최소 2자 최대 30자 이내로 작성해주세요.")
     @Schema(description = "레시피 제목", requiredMode = REQUIRED, example = "어머니의 김치찌개")
     String title,
+    @NotBlank(message = "가족 레시피를 만든 사람을 적어주세요.")
+    @Size(max = 30, message = "레시피 주인을 최대 30자 이내로 작성해주세요.")
     @Schema(description = "레시피 주인", requiredMode = REQUIRED, example = "어머니")
     String origin,
     @Schema(description = "레시피 소개", requiredMode = NOT_REQUIRED, example = "가족의 레시피를 간단하게 1줄로 소개해보세요.")
     String content,
+    @NotBlank(message = "레시피 카테고리를 선택해주세요.")
     @Schema(description = "카테고리 코드", requiredMode = REQUIRED, example = "001")
     String category,
     @Schema(description = "레시피 기준 인원", requiredMode = NOT_REQUIRED, example = "2")
     Integer capacity,
-    @Schema(description = "레시피 공개여부", requiredMode = NOT_REQUIRED, example = "Y")
+    @Schema(description = "레시피 공개여부 (삭제예정)", requiredMode = NOT_REQUIRED, example = "Y", hidden = true)
     String totalOpenYn,
+    @Schema(description = "레시피 공개여부", requiredMode = NOT_REQUIRED, example = "true")
+    Boolean isOpen,
     @Schema(description = "영상 URL (파일 변경 또는 삭제시 빈값)", requiredMode = NOT_REQUIRED, example = "")
     String cookingVideoUrl,
     @Schema(description = "대표 사진 URL (이미지 변경 또는 삭제시 빈값)", requiredMode = NOT_REQUIRED, example = "http://www.daedaesonson.site/static/sample8.jpeg")
@@ -82,7 +92,7 @@ public record RecipeUpdateRequest(
             .content(this.content)
             .category(Category.getByValue(this.category))
             .capacity(this.capacity)
-            .totalOpenYn(this.totalOpenYn)
+            .totalOpenYn(TRUE.equals(isOpen) ? "Y" : "N")
             .cookingImageUrl(this.cookingImageUrl)
             .cookingVideoUrl(this.cookingVideoUrl)
             .build();
