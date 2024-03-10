@@ -14,7 +14,7 @@ public class RecipeConstants {
           \\\\"title\\\\": \\\\"어머니의 김치찌개\\\\",
           \\\\"origin\\\\": \\\\"어머니\\\\",
           \\\\"content\\\\": \\\\"가족의 레시피를 간단하게 1줄로 소개해보세요.\\\\",
-          \\\\"category\\\\": \\\\"CTGR_001\\\\",
+          \\\\"category\\\\": \\\\"001\\\\",
           \\\\"capacity\\\\": 2,
           \\\\"isOpen\\\\": true,
           \\\\"ingredientList\\\\": [
