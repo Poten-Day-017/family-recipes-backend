@@ -6,12 +6,14 @@ import lombok.Builder;
 @Builder
 public record UserProfileResponse(
         Long userId,
-        String userNickname
+        String userNickname,
+        int numberOfRecipes
 ) {
     public static UserProfileResponse of(User user) {
         return UserProfileResponse.builder()
                 .userId(user.getId())
                 .userNickname(user.getUserNickname())
+                .numberOfRecipes(user.getRecipes().size())
                 .build();
     }
 }
