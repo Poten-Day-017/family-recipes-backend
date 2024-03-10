@@ -35,6 +35,10 @@ public class User {
     @OneToMany(mappedBy = "user")
     List<Recipe> recipes = new ArrayList<>();
 
+    public void onboardUser(String userNickname) {
+        this.userNickname = userNickname;
+    }
+
     @Builder
     public User(String userNickname, String profileImage){
         this.userNickname = userNickname;
