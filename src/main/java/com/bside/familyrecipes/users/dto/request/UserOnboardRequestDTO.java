@@ -1,7 +1,7 @@
 package com.bside.familyrecipes.users.dto.request;
 
-public record UserUpdateNicknameRequest(
+public record UserOnboardRequestDTO(
         Long userId,
-        String nickname
+        String userNickname
 ) {
 }

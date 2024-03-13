@@ -2,11 +2,11 @@ spring:
   config:
     activate:
       on-profile: dev
-  datasource:
-    url: jdbc:h2:mem:test
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+#  datasource:
+#    url: jdbc:h2:mem:test
+#    username: sa
+#    password:
+#    driver-class-name: org.h2.Driver
   jpa:
     generate-ddl: true
     show-sql: true
@@ -15,12 +15,12 @@ spring:
     properties:
       hibernate:
         format_sql: true
-    defer-datasource-initialization: true
-    database-platform: org.hibernate.dialect.H2Dialect
-  sql:
-    init:
-      data-locations: classpath*:sql/init-data.sql
-      mode: embedded
+#    defer-datasource-initialization: true
+#    database-platform: org.hibernate.dialect.H2Dialect
+#  sql:
+#    init:
+#      data-locations: classpath*:sql/init-data.sql
+#      mode: embedded
 
 kakao:
   client:
@@ -28,6 +28,13 @@ kakao:
   redirect:
     uri: http://localhost:8080/kakao/callback
 jwt:
-  secret:
+  secret: ZGFlZGFlc29uc29uLW9mLXBvdGVuZGF5LWp3dC1zZWNyZXQta2V5Cg==
 server:
   url: http://localhost:8080
+file:
+  store:
+    url: https://www.daedaesonson.site/static
+    path: /home/nginx/static
+
+familyRecipeBook:
+  version: 1.0.0
