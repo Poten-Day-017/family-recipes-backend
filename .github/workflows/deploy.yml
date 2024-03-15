@@ -38,6 +38,23 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
+    # Gradle 캐싱 적용
+    - name: Gradle Caching
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
+    # prod yml 파일 생성
+    - name: Build application-prod.yml
+      run: |
+        touch ./src/main/resources/application-prod.yml
+        echo "${{ SPRING_PROD_CONFIG }}" > ./src/main/resources/application-prod.yml
+    
     # Configure Gradle for optimal use in GiHub Actions, including caching of downloaded dependencies.
     # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
     - name: Setup Gradle
@@ -46,6 +63,7 @@ jobs:
     - name: Build with Gradle Wrapper
       run: |
         chmod +x gradlew
+        echo "$"
         ./gradlew build  -x test
 
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
@@ -68,6 +86,18 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         source: "build/libs/*.jar"
         target: ${{ secrets.SERVER_DEPLOY_DIR }}
+
+    - name: Deploy prod
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        port: ${{ secrets.SERVER_PORT }}
+        username: ${{ secrets.SERVER_USERNAME }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        script: |
+          cd ${{ secrets.SERVER_DEPLOY_DIR }}
+          ./${{ secrets.SERVER_DEPLOY_FILE_1 }}
+          
 
   dependency-submission:
     runs-on: ubuntu-latest
