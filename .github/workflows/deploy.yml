@@ -53,7 +53,7 @@ jobs:
     - name: Build application-prod.yml
       run: |
         touch ./src/main/resources/application-prod.yml
-        echo "${{ SPRING_PROD_CONFIG }}" > ./src/main/resources/application-prod.yml
+        echo "${{ secrets.SPRING_PROD_CONFIG }}" > ./src/main/resources/application-prod.yml
     
     # Configure Gradle for optimal use in GiHub Actions, including caching of downloaded dependencies.
     # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
