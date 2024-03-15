@@ -17,3 +17,11 @@ spring:
     multipart:
       max-file-size: 1GB
       max-request-size: 1GB
+
+management:
+  endpoints:
+    health:
+      show-details: always
+    web:
+      exposure:
+        include: "*"
