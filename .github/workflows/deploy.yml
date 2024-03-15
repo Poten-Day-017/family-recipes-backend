@@ -94,7 +94,7 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
           cd ${{ secrets.SERVER_DEPLOY_DIR }}
-          ./${{ secrets.SERVER_DEPLOY_FILE_1 }}
+          ./${{ secrets.SERVER_DEPLOY_FILE_1 }} || exit 1
 
     - name: Deploy JAR file 2
       uses: appleboy/ssh-action@master
@@ -105,7 +105,7 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
           cd ${{ secrets.SERVER_DEPLOY_DIR }}
-          ./${{ secrets.SERVER_DEPLOY_FILE_2 }}
+          ./${{ secrets.SERVER_DEPLOY_FILE_2 }} || exit 1
 
   dependency-submission:
     runs-on: ubuntu-latest
