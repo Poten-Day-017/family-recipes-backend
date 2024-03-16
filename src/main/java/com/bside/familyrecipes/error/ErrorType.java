@@ -18,7 +18,7 @@ public enum ErrorType {
     USER_NOT_FOUND(UNAUTHORIZED, "사용자 정보가 존재하지 않습니다."),
     UNAUTHORIZED_EXCEPTION(UNAUTHORIZED, "권한이 없습니다."),
     BAD_REQUEST_EXCEPTION(BAD_REQUEST, "잘못된 요청입니다."),
-    INVALID_CONTENT_TYPE_EXCEPTION(METHOD_NOT_ALLOWED, "지원하지 않는 콘텐츠 타입 요청입니다."),
+    INVALID_CONTENT_TYPE_EXCEPTION(UNSUPPORTED_MEDIA_TYPE, "지원하지 않는 콘텐츠 타입 요청입니다."),
     INTERNAL_ERROR(INTERNAL_SERVER_ERROR, "서버 내부 오류가 발생했습니다.")
     ;
 
