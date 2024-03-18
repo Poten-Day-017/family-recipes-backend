@@ -114,7 +114,7 @@ public class Recipe extends BaseEntity {
             this.cookingImageUrl = storedFiles.get("cookingImage");
         }
 
-        if (!StringUtils.hasText(this.cookingImageUrl)) {
+        if (!StringUtils.hasText(this.cookingVideoUrl)) {
             this.cookingVideoUrl = storedFiles.get("cookingVideo");
         }
 
