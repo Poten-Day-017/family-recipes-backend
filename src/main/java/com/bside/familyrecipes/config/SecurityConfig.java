@@ -32,7 +32,7 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web -> web.ignoring()
-            .requestMatchers("/v3/**", "/swagger-ui/**", "/favicon*/**", "/swagger-ui.html"));
+            .requestMatchers("/v3/**", "/swagger-ui/**", "/favicon*/**", "/swagger-ui.html", "/actuator/**"));
     }
 
     @Bean

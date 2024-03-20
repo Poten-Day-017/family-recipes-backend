@@ -34,6 +34,8 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'
 
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
     // lombok 뒤에 위치 필요
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'

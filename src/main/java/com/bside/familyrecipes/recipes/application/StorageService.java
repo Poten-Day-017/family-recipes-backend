@@ -55,7 +55,11 @@ public class StorageService {
     }
 
     private String replaceRandomFileName(String originalFileName) {
-        var fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
-        return RandomStringUtils.randomAlphabetic(40) + fileExtension;
+        StringBuilder sb = new StringBuilder(RandomStringUtils.randomAlphabetic(40));
+        if (originalFileName.lastIndexOf(".") > 0) {
+            var fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+            sb.append(fileExtension);
+        }
+        return sb.toString();
     }
 }
