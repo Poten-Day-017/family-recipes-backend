@@ -1,16 +1,17 @@
-package com.bside.familyrecipes.config.jwt;
+package com.bside.familyrecipes.oauth.jwt;
 
-import com.bside.familyrecipes.common.exception.AuthException;
-import com.bside.familyrecipes.common.message.ExceptionMessage;
 import com.bside.familyrecipes.config.AuthConfig;
+import com.bside.familyrecipes.error.exception.BusinessException;
+import com.bside.familyrecipes.oauth.UserAuthentication;
+import com.bside.familyrecipes.users.application.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.xml.bind.DatatypeConverter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -19,10 +20,14 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
+import static com.bside.familyrecipes.error.ErrorType.UNAUTHORIZED_EXCEPTION;
+
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class JwtTokenManager {
     private final AuthConfig authConfig;
+    private final UserRepository userRepository;
     private final ZoneId KST = ZoneId.of("Asia/Seoul");
 
 
@@ -57,6 +62,7 @@ public class JwtTokenManager {
             getClaimsFromToken(token);
             return true;
         } catch ( SignatureException | ExpiredJwtException e ) {
+            log.error("Token is invalid or expired", e);
             return false;
         }
     }
@@ -67,5 +73,12 @@ public class JwtTokenManager {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    public UserAuthentication getAuthentication(String token) {
+        val claims = getClaimsFromToken(token);
+        val userId = Long.parseLong(claims.getSubject());
+        val user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(UNAUTHORIZED_EXCEPTION));
+        return new UserAuthentication(user);
     }
 }

@@ -1,11 +1,10 @@
 package com.bside.familyrecipes.social.application;
 
 import com.bside.familyrecipes.config.AppConfig;
-import com.bside.familyrecipes.config.jwt.JwtTokenManager;
+import com.bside.familyrecipes.oauth.jwt.JwtTokenManager;
 import com.bside.familyrecipes.social.domain.AuthProvider;
 import com.bside.familyrecipes.social.dto.request.SocialLoginRequestDTO;
 import com.bside.familyrecipes.social.dto.response.SocialLoginResponseDTO;
-import com.bside.familyrecipes.social.enums.ProviderType;
 import com.bside.familyrecipes.users.application.UserRepository;
 import com.bside.familyrecipes.users.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +34,7 @@ public class SocialCommonServiceImpl implements SocialCommonService{
     }
 
     @Transactional
-    private SocialLoginResponseDTO SignUpAndLogin(
+    protected SocialLoginResponseDTO SignUpAndLogin(
             SocialLoginRequestDTO socialLoginRequestDTO
     ) {
         val user = userRepository.save(User.builder()
